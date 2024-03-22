@@ -84,7 +84,6 @@ def get_crack_time(pool, length, current_gps):
     # and is represented as the last number in the gps list below. See global
     # variable current_gps below imports.
     gps = [10_000, 5_000_000, 250_000_000_000, 1_000_000_000_000, current_gps]  # Guesses per second
-    # magnitudes = [(1, "years"), (10_000, "thousand years"), (1_000_000, "million years"), (1_000_000_000, "billion years"), (1_000_000_000_000, "trillion years"), (1_000_000_000_000_000, "quintillion years"), (1_000_000_000_000_000_000, "∞ years")]
     magnitudes = [(1_000_000_000_000_000_000, "∞ years"), (1_000_000_000_000_000, "quintillion years"), (1_000_000_000_000, "trillion years"), (1_000_000_000, "billion years"), (1_000_000, "million years"), (10_000, "thousand years"), (1, "years")]
     neg_magnitudes = [(.1, "months"), (.01, "days"), (.001, "hours"), (.0001, "minutes"), (.00001, "seconds"), (.000001, "less than a second")]
     crack_time = {}
@@ -209,8 +208,6 @@ if __name__ == "__main__":
         symbols = 32 if input("Include Symbols (y/n): ").lower() == "y" else 0
 
     pool = lowercase + uppercase + digits + symbols
-    pool = 100
-    length = 10
     entropy = math.log2(pool**length)
 
     print(f"\nEntropy: {entropy:.2f} bits - Use Case: {get_strength(entropy)} account password")
