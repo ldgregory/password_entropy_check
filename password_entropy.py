@@ -104,13 +104,11 @@ def get_crack_time(pool, length, current_gps):
         if years >= 1:
             for i in range(len(magnitudes)):
                 if years >= magnitudes[i][0]:
-                    print(f"GT1 {guess:,} {years}, {magnitudes[i][0]}")
                     crack_time[f'{int(guess):,}/s'] = "∞ years" if magnitudes[i][1] == "∞ years" else f'{(int(years)/magnitudes[i][0]):.2f} {magnitudes[i][1]}'
                     break
         else:
             for i in range(len(neg_magnitudes)):
                 if years >= neg_magnitudes[i][0]:
-                    print(f"LT1 {guess:,} {years}, {Decimal(neg_magnitudes[i][0])}")
                     crack_time[f'{int(guess):,}/s'] = "less than a second" if neg_magnitudes[i][1] == "less than a second" else f'{(years/neg_magnitudes[i][0]):.2f} {neg_magnitudes[i][1]}'
                     break
 
