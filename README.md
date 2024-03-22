@@ -12,21 +12,18 @@ Scale assumes anything less than 60 bits entropy is a weak password.
 - 11 character password with lower | upper | digit | symbol chars
 - 11 character password with (lower | upper | symbol) & digit chars
 
-Entropy bits for single character:
-- lower | upper: 4.70 bits
-- lower | upper & digit: 5.17 bits
-- digit & symbol: 5.39 bits
-- lower & upper: 5.70 bits
-- lower | upper & symbol: 5.86 bits
-- lower & upper & digit: 5.95 bits
-- lower & upper & digit & symbol: 6.55 bits
+## Example
+**python3 password_entropy.py P@55w0rd**
 
-Formula: E = log₂(Pᴸ) or can also be done as E = L * log₂(P)
+## Result
+Entropy: 52.44 bits - Use Case: Weak account password
 
-- E = Entropy in bits
-- L = Character length of password
-- P = Pool of characters 
-    - Lowercase: 26 chars
-    - Uppercase: 26 chars
-    - Digits: 10 chars
-    - Special: 32 chars
+WARNING: P@55w0rd is listed in the haveibeenpwned.com database from 20,136 breaches!
+
+Worst case (for hacker) to crack your password at various guesses per second.
+
+10,000/s                  19 thousand years        
+5,000,000/s               38 years                 
+250,000,000,000/s         77 hours                 
+1,000,000,000,000/s       19 hours                 
+1,500,000,000,000,000/s   less than a second  
