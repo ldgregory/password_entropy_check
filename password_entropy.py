@@ -4,6 +4,7 @@ Calculate bits of entropy for passwords, cracking time, and check if password ha
 Tested to Python v3.11.6
 
 Changelog
+20240322 -  Added Moore's law alt calc and fixed some bone-headed math mistakes
 20240321 -  Added haveibeenpwned.com API check
 20240320 -  Added get_crack_time function
 20240308 -  Initial Code
@@ -36,6 +37,7 @@ P = Pool of characters
     - Uppercase: 26 chars
     - Digits: 10 chars
     - Special: 32 chars
+    - At least one of each of the above: 94 chars
 
 www.pwnedpasswords.com API: 
 https://haveibeenpwned.com/API/v3#SearchingPwnedPasswordsByRange
@@ -63,7 +65,7 @@ import time
 from decimal import Decimal
 
 
-def get_crack_time(pool, length):
+def get_crack_time(pool, length, current_gps):
     """
     Determine how long it would take to crack a password based on
     varying number of guesses per second.
@@ -78,13 +80,19 @@ def get_crack_time(pool, length):
     dict : element 1: guesses/s, element 2: time to crack
     """
 
-    crack_time = {}
-    gps = [10_000, 5_000_000, 250_000_000_000, 1_000_000_000_000, 1_500_000_000_000_000]  # Guesses per second
-    magnitudes = [(1, "years"), (10_000, "thousand years"), (1_000_000, "million years"), (1_000_000_000, "billion years"), (1_000_000_000_000, "trillion years"), (1_000_000_000_000_000, "quintillion years"), (1_000_000_000_000_000_000, "∞ years")]
+    # As of 20240308, the fastest cracking rig was capable of 2.7 trillion gps 
+    # and is represented as the last number in the gps list below. See global
+    # variable current_gps below imports.
+    gps = [10_000, 5_000_000, 250_000_000_000, 1_000_000_000_000, current_gps]  # Guesses per second
+    # magnitudes = [(1, "years"), (10_000, "thousand years"), (1_000_000, "million years"), (1_000_000_000, "billion years"), (1_000_000_000_000, "trillion years"), (1_000_000_000_000_000, "quintillion years"), (1_000_000_000_000_000_000, "∞ years")]
+    magnitudes = [(1_000_000_000_000_000_000, "∞ years"), (1_000_000_000_000_000, "quintillion years"), (1_000_000_000_000, "trillion years"), (1_000_000_000, "billion years"), (1_000_000, "million years"), (10_000, "thousand years"), (1, "years")]
     neg_magnitudes = [(.1, "months"), (.01, "days"), (.001, "hours"), (.0001, "minutes"), (.00001, "seconds"), (.000001, "less than a second")]
+    crack_time = {}
 
     for guess in gps:
-        time_to_crack = (((pool**length) / guess))
+        # More traditional method based on current day compute power and
+        # how long it would take to crack the password.
+        time_to_crack = (((pool**length) / guess))  # In seconds
 
         # seconds = time_to_crack
         # minutes = time_to_crack / 60
@@ -94,15 +102,18 @@ def get_crack_time(pool, length):
         # months = time_to_crack / 2628000
         years = time_to_crack / 31536000
 
-        for i in range(len(magnitudes)):
-            if years >= magnitudes[i][0]:
-                temp = "".join(x for x in str(years) if x.isdigit())
-                crack_time[f'{guess:,}/s'] = "∞ years" if magnitudes[i][1] == "∞ years" else f'{temp[:2]} {magnitudes[i][1]}'
-            else:
-                for i in range(len(neg_magnitudes)):
-                    if years <= neg_magnitudes[i][0]:
-                        temp = ("".join(x for x in str(Decimal(years)) if x.isdigit())).lstrip('0')
-                        crack_time[f'{guess:,}/s'] = "less than a second" if neg_magnitudes[i][1] == "less than a second" else f'{temp[:2]} {neg_magnitudes[i][1]}'
+        if years >= 1:
+            for i in range(len(magnitudes)):
+                if years >= magnitudes[i][0]:
+                    print(f"GT1 {guess:,} {years}, {magnitudes[i][0]}")
+                    crack_time[f'{int(guess):,}/s'] = "∞ years" if magnitudes[i][1] == "∞ years" else f'{(int(years)/magnitudes[i][0]):.2f} {magnitudes[i][1]}'
+                    break
+        else:
+            for i in range(len(neg_magnitudes)):
+                if years >= neg_magnitudes[i][0]:
+                    print(f"LT1 {guess:,} {years}, {Decimal(neg_magnitudes[i][0])}")
+                    crack_time[f'{int(guess):,}/s'] = "less than a second" if neg_magnitudes[i][1] == "less than a second" else f'{(years/neg_magnitudes[i][0]):.2f} {neg_magnitudes[i][1]}'
+                    break
 
     return crack_time
 
@@ -170,6 +181,10 @@ def get_strength(entropy_bits):
 
 
 if __name__ == "__main__":
+    # Var to indicate today's fastest cracking rig as guesses
+    # per second (gps)
+    current_gps = 2.7e+12  # 2.7 trillion gps
+
     if len(sys.argv) > 1:  # looking for a password as an argument
         lowercase = 0
         uppercase = 0
@@ -194,6 +209,8 @@ if __name__ == "__main__":
         symbols = 32 if input("Include Symbols (y/n): ").lower() == "y" else 0
 
     pool = lowercase + uppercase + digits + symbols
+    pool = 100
+    length = 10
     entropy = math.log2(pool**length)
 
     print(f"\nEntropy: {entropy:.2f} bits - Use Case: {get_strength(entropy)} account password")
@@ -218,8 +235,27 @@ if __name__ == "__main__":
 
     print(f"\nWorst case (for hacker) to crack your password at various guesses per second.")
 
-    crack_time = get_crack_time(pool, length)
+    crack_time = get_crack_time(pool, length, current_gps)
 
     cw = 25  # Column width for displayed output
     for k, v in crack_time.items():
         print(f"{k:<{cw}} {v:<{cw}}")
+
+    print(f"\nMoore's law method to get to a 1 hour crack time.")
+
+    # Alternative method based on Moore's law to get to a processing point
+    # in years where the password could be cracked in under an hour. The article
+    # was written in 2019 and assumed a current gps of 10⁹ whereas at the time of
+    # writing this script it is 2.7 x 10¹². I have adjusted the calculation below
+    # to account for that using the current_gps variable.
+    # https://www.scientificamerican.com/article/the-mathematics-of-hacking-passwords/
+    time_to_crack_alt = 2 * math.log2((pool**length) / (current_gps * 3600))
+
+    if time_to_crack_alt < 0:
+        alt_years = "Can already be cracked in less than an hour"
+    elif 0 < time_to_crack_alt <= 1:
+        alt_years = "1 year or less"
+    else:
+        alt_years = f"{time_to_crack_alt:.2f} years"
+
+    print(alt_years)
