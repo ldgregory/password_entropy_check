@@ -236,7 +236,7 @@ if __name__ == "__main__":
     for k, v in crack_time.items():
         print(f"{k:<{cw}} {v:<{cw}}")
 
-    print(f"\nMoore's law method to get to a 1 hour crack time.")
+    print(f"\nMoore's law method: How many years until a rig can generate\nenough guesses to crack the password in one hour.")
 
     # Alternative method based on Moore's law to get to a processing point
     # in years where the password could be cracked in under an hour. The article
