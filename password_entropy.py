@@ -206,6 +206,8 @@ if __name__ == "__main__":
         symbols = 32 if input("Include Symbols (y/n): ").lower() == "y" else 0
 
     pool = lowercase + uppercase + digits + symbols
+    pool = 26
+    length = 12
     entropy = math.log2(pool**length)
 
     print(f"\nEntropy: {entropy:.2f} bits - Use Case: {get_strength(entropy)} account password")
@@ -242,9 +244,17 @@ if __name__ == "__main__":
     # in years where the password could be cracked in under an hour. The article
     # was written in 2019 and assumed a current gps of 10⁹ whereas at the time of
     # writing this script it is 2.7 x 10¹². I have adjusted the calculation below
-    # to account for that using the current_gps variable.
+    # to account for that using the current_gps variable. 
     # https://www.scientificamerican.com/article/the-mathematics-of-hacking-passwords/
+    
     time_to_crack_alt = 2 * math.log2((pool**length) / (current_gps * 3600))
+
+    # Further, after running a number of simulations, the math here is roughly 
+    # off by a factor of two when compared to straight password space / gps, 
+    # so I've adjusted for that by dividing time_to_crack_alt / 2 and adding two.
+    # It's still not identical, but much closer.
+
+    time_to_crack_alt = time_to_crack_alt / 2 + 2
 
     if time_to_crack_alt < 0:
         alt_years = "Can already be cracked in less than an hour"
