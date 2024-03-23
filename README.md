@@ -27,4 +27,5 @@ Worst case (for hacker) to crack your password at various guesses per second.
 
 Moore's law method: How many years until a rig can generate enough guesses per 
 second to crack the password in one hour.
+
 5.30 years
