@@ -13,10 +13,12 @@ Scale assumes anything less than 60 bits entropy is a weak password.
 - 11 character password with (lower | upper | symbol) & digit chars
 
 ## Example
-**python3 ../password_entropy.py P@55w0rd#$**
+**python3 ../password_entropy.py Spring2024!**
 
 ## Result
 Entropy: 56.41 bits - Use Case: Weak account password
+
+WARNING: Spring2024! is listed in the haveibeenpwned.com database from 2 breaches!
 
 Worst case (for hacker) to crack your password at various guesses per second.
 10,000/s                  30.26 thousand years     
@@ -25,7 +27,7 @@ Worst case (for hacker) to crack your password at various guesses per second.
 1,000,000,000,000/s       3.03 hours               
 2,700,000,000,000/s       1.12 hours               
 
-Moore's law method: How many years until a rig can generate enough guesses per 
+Moore's law method: How many years until a rig can generate enough guesses per
 second to crack the password in one hour.
 
 5.30 years
