@@ -13,17 +13,18 @@ Scale assumes anything less than 60 bits entropy is a weak password.
 - 11 character password with (lower | upper | symbol) & digit chars
 
 ## Example
-**python3 password_entropy.py P@55w0rd**
+**python3 ../password_entropy.py P@55w0rd#$**
 
 ## Result
-Entropy: 52.44 bits - Use Case: Weak account password
-
-WARNING: P@55w0rd is listed in the haveibeenpwned.com database from 20,136 breaches!
+Entropy: 56.41 bits - Use Case: Weak account password
 
 Worst case (for hacker) to crack your password at various guesses per second.
+10,000/s                  30.26 thousand years     
+5,000,000/s               605.00 years             
+250,000,000,000/s         1.21 days                
+1,000,000,000,000/s       3.03 hours               
+2,700,000,000,000/s       1.12 hours               
 
-10,000/s                  19 thousand years        
-5,000,000/s               38 years                 
-250,000,000,000/s         77 hours                 
-1,000,000,000,000/s       19 hours                 
-1,500,000,000,000,000/s   less than a second  
+Moore's law method: How many years until a rig can generate enough guesses per 
+second to crack the password in one hour.
+5.30 years
