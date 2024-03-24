@@ -180,7 +180,7 @@ def get_strength(entropy_bits):
 if __name__ == "__main__":
     # Var to indicate today's fastest cracking rig as guesses
     # per second (gps)
-    current_gps = 2.7e+12  # 2.7 trillion gps
+    current_gps = 2.7e+9  # 2.7 trillion gps
 
     if len(sys.argv) > 1:  # looking for a password as an argument
         lowercase = 0
