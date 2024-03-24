@@ -21,6 +21,7 @@ Entropy: 56.41 bits - Use Case: Weak account password
 WARNING: Spring2024! is listed in the haveibeenpwned.com database from 2 breaches!
 
 Worst case (for hacker) to crack your password at various guesses per second.
+
 10,000/s                  30.26 thousand years     
 5,000,000/s               605.00 years             
 250,000,000,000/s         1.21 days                
