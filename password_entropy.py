@@ -256,6 +256,12 @@ if __name__ == "__main__":
     guesses_per_second_required = permutations_per_hour / 3600
     time_to_crack_alt = math.log2(guesses_per_second_required / current_gps) / math.log2(2)
 
+    # At any rate, I thought it was a more interesting calculation than the standard
+    # pool**length / gps, but understand that while Moore's Law states that the
+    # number of transistors on an IC will double every year, and it's been accurate
+    # so far, it does not necessarily coorelate with doubling the gps capability as
+    # well. I just thought it'd be fun to throw in here for comparison sake.
+
     if time_to_crack_alt < 0:
         alt_years = "Can already be cracked in less than an hour"
     elif 0 < time_to_crack_alt <= 1:
