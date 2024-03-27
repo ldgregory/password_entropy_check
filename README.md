@@ -16,19 +16,19 @@ Scale assumes anything less than 60 bits entropy is a weak password.
 **python3 ../password_entropy.py Spring2024!**
 
 ## Result
-Entropy: 56.41 bits - Use Case: Weak account password
+Entropy: 72.10 bits - Use Case: Normal account password
 
 WARNING: Spring2024! is listed in the haveibeenpwned.com database from 2 breaches!
 
 Worst case (for hacker) to crack your password at various guesses per second.
 
-10,000/s                  30.26 thousand years     
-5,000,000/s               605.00 years             
-250,000,000,000/s         1.21 days                
-1,000,000,000,000/s       3.03 hours               
-2,700,000,000,000/s       1.12 hours               
+10,000/s                  16.05 billion years      
+5,000,000/s               32.11 million years      
+250,000,000,000/s         642.00 years             
+1,000,000,000,000/s       160.00 years             
+2,700,000,000,000/s       59.00 years              
 
 Moore's law method: How many years until a rig can generate enough guesses per
 second to crack the password in one hour.
 
-5.30 years
+7.18 years
